@@ -1,11 +1,6 @@
 package org.jhonatan.jdbc.modelo.repositorio;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.jhonatan.jdbc.modelo.Categoria;
@@ -20,7 +15,7 @@ public class ProductoRepositorioImpl
     }
 
     @Override
-    public List<Producto> listar() {
+    public List<Producto> listar() throws SQLException {
         List<Producto> productos = new ArrayList<>();
         try ( Statement stmt = getConection().createStatement();  ResultSet rs = stmt.executeQuery("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria")) {
             while (rs.next()) {
@@ -28,16 +23,13 @@ public class ProductoRepositorioImpl
                 //agregamos al arraylist
                 productos.add(p);
             }
-        } catch (Exception e) {
-            System.out.println("error al listar: " + e.getMessage());
         }
-
         //revolvemos la lista
         return productos;
     }
 
     @Override
-    public Producto porId(Long id) {
+    public Producto porId(Long id) throws SQLException {
         Producto p = null;
         try ( PreparedStatement stmt = getConection()
                 .prepareStatement("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria "
@@ -50,15 +42,13 @@ public class ProductoRepositorioImpl
                     p = creaProducto(rs);
                 }
             }
-        } catch (Exception e) {
-            System.out.println("Error por id: " + e.getMessage());
         }
 
         return p;
     }
 
     @Override
-    public void guardar(Producto t) {
+    public void guardar(Producto t) throws SQLException {
         String sql;
         if (t.getId() != null && t.getId() > 0) {
             sql = "UPDATE productos SET nombre = ?, precio = ?,id_categoria = ?,sku = ?  WHERE idproducto = ? ";
@@ -79,19 +69,15 @@ public class ProductoRepositorioImpl
             }
             //ejecutamos
             stmt.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("error al guardar: " + e.getMessage());
         }
     }
 
     @Override
-    public void eliminar(Long id) {
+    public void eliminar(Long id) throws SQLException {
         try ( PreparedStatement stmt = getConection()
                 .prepareStatement("DELETE FROM productos WHERE idproducto = ?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("Error al eliminar: " + e.getMessage());
         }
     }
 
