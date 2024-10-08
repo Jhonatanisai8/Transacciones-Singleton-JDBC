@@ -14,7 +14,7 @@ import org.jhonatan.jdbc.util.ConexionBaseDatos;
 public class EjemploJdbc {
 
     public static void main(String[] args) {
-        System.out.println("JAVA Y JBDC");
+        System.out.println("JAVA Y JBDC TRANSACIONES");
 
         try ( //le pasamos los parametros
                  Connection con = ConexionBaseDatos.getInstance();) {
