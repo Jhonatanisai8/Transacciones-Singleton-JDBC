@@ -61,9 +61,9 @@ public class ProductoRepositorioImpl
     public void guardar(Producto t) {
         String sql;
         if (t.getId() != null && t.getId() > 0) {
-            sql = "UPDATE productos SET nombre = ?, precio = ?,id_categoria = ? WHERE idproducto = ? ";
+            sql = "UPDATE productos SET nombre = ?, precio = ?,id_categoria = ?,sku = ?  WHERE idproducto = ? ";
         } else {
-            sql = "INSERT INTO productos (nombre,precio,id_categoria,fecha) VALUES (?,?,?,?)";
+            sql = "INSERT INTO productos (nombre,precio,id_categoria,sku,fecha) VALUES (?,?,?,?,? )";
         }
         try ( PreparedStatement stmt = getConection().prepareStatement(sql)) {
 
@@ -71,10 +71,11 @@ public class ProductoRepositorioImpl
             stmt.setString(1, t.getNombre());
             stmt.setDouble(2, t.getPrecio());
             stmt.setLong(3, t.getCategoria().getIdCategoria());
+            stmt.setString(4, t.getSku());
             if (t.getId() != null && t.getId() > 0) {
-                stmt.setLong(4, t.getId());
+                stmt.setLong(5, t.getId());
             } else {
-                stmt.setDate(4, new Date(t.getFechaRegistro().getTime()));
+                stmt.setDate(5, new Date(t.getFechaRegistro().getTime()));
             }
             //ejecutamos
             stmt.executeUpdate();
@@ -100,6 +101,7 @@ public class ProductoRepositorioImpl
         p.setNombre(rs.getString("nombre"));
         p.setPrecio(rs.getInt("precio"));
         p.setFechaRegistro(rs.getDate("fecha"));
+        p.setSku(rs.getString("sku"));
 
         Categoria c = new Categoria();
         c.setIdCategoria(rs.getInt("id_categoria"));

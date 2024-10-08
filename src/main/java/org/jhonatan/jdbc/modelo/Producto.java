@@ -10,6 +10,7 @@ public class Producto {
     private Date fechaRegistro;
     //agregando el nuevo producto
     private Categoria categoria;
+    private String sku;
 
     public Producto() {
     }
@@ -27,6 +28,14 @@ public class Producto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getSku() {
+        return sku;
     }
 
     public String getNombre() {
@@ -71,7 +80,8 @@ public class Producto {
                 + " | "
                 + fechaRegistro
                 + " | "
-                + categoria.getNombre();
+                + categoria.getNombre()+
+                "  | "+sku;
     }
 
 }
